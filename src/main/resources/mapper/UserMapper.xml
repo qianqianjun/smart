@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--author 高谦-->
+<mapper namespace="buct.qianqianjun.create.dao.UserDao">
+    <select id="Login" parameterType="buct.qianqianjun.create.domain.User" resultType="buct.qianqianjun.create.domain.User">
+        select * from user where user.account=#{account} and user.password=#{password}
+    </select>
+    <insert id="addUser" parameterType="buct.qianqianjun.create.domain.User">
+        insert into user values(#{account},#{password},0,#{uName},#{mail});
+    </insert>
+    <select id="getByAccount" resultType="buct.qianqianjun.create.domain.User" parameterType="STRING">
+        select * from user where user.account=#{account}
+    </select>
+</mapper>

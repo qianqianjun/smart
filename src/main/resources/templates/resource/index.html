@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>智慧链-资源管理</title>
+    <link rel="stylesheet" href="app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app/css/dest/styles.css">
+    <script src="web3.min.js"></script>
+    <style>
+        .org-header {
+            padding: 100px 0;
+            color: #fff;
+            background: url(../img/org-bg.png);
+            text-align: center;
+        }
+        .org-header h2 {
+            font-size: 45px;
+        }
+        .org-header p {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: 700;
+        }
+        .org-body-desc {
+            padding: 50px 0 0px;
+        }
+        .org-body-desc .media-body {
+            font-size: 16px;
+        }
+        .org-body-courses {
+            padding: 50px 0;
+            background: #fff;
+        }
+        .org-body-courses .container {
+            position: relative;
+        }
+        .org-body-courses .media {
+            display: block;
+            padding: 10px;
+            margin-bottom: 50px;
+            color: #333;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 0 4px 2px #eee;
+        }
+        .org-body-courses .media:hover,
+        .org-body-courses .media:focus {
+            text-decoration: none;
+        }
+        .org-body-courses .media img {
+            width: 80px;
+            height: 80px;
+            border-radius: 4px;
+            box-shadow: 0 0 4px 2px #eee;
+        }
+        .org-body-courses .media-body h4 {
+            word-break: break-all;
+            font-size: 16px;
+            line-height: 1.6em;
+        }
+        .org-course-more {
+            text-align: center;
+        }
+        .org-course-more .btn {
+            padding: 4px 20px;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 这里是导航，这里写导航，这里写导航，这里写导航，这里写导航，这里写导航，这里写导航，这里写导航，这里写导航。 -->
+<div class="org-header">
+    <h2>专业，高效的资源分享解决方案</h2>
+    <p>保护资源版权，永久存储信息，优化协作与分享模式</p>
+</div>
+<div class="org-body">
+    <div class="container">
+        <div class="row org-body-desc">
+            <div class="col-md-4">
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="../img/org-kaopu.png">
+                    </div>
+                    <div class="media-body">
+                        资源协作<br>共创精品
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="../img/org-jingdian.png">
+                    </div>
+                    <div class="media-body">
+                        资源获取<br>资源分享
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="media">
+                    <div class="media-left">
+                        <img class="media-object" src="../img/org-gaoxiao.png">
+                    </div>
+                    <div class="media-body">
+                        版权保护<br>版权转移
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="org-body-courses">
+        <div class="container">
+            <div class="row" id="right_display" style="display: none;">
+                <div class="col-md-4">
+                    <a class="media" href="/resource/share" target="_blank">
+                        <div class="media-left">
+                            <img class="media-object" src="../img/1470893356136.png">
+                        </div>
+                        <div class="media-body">
+                            <p>发布分享</p>
+                            <h4>电子资源发布与分享功能</h4>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a class="media" href="/resource/message" target="_blank">
+                        <div class="media-left">
+                            <img class="media-object" src="../img/1470893366264.png">
+                        </div>
+                        <div class="media-body">
+                            <p>消息查看</p>
+                            <h4>查看资源交易信息和协作信息</h4>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="col-md-4">
+                    <a class="media" href="/resource/management" target="_blank">
+                        <div class="media-left">
+                            <img class="media-object" src="../img/1470893373975.png">
+                        </div>
+                        <div class="media-body">
+                            <p>资源管理</p>
+                            <h4>版权转移，协议更改</h4>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="row" id="error_tips" style="display: none;">
+                <h3>您的浏览器没有安装 MetaMask 插件，无法与区块链进行交互，请<b><a href="https://metamask.io/">安装该插件</a></b>，完成后重启浏览器进入！</h3>
+            </div>
+            <div class="row" id="reset_btn" style="display: none;">
+                <h3>您没有授权，无法进行操作，现在授权：</h3>
+                <button onclick="detectMetaMask()" class="btn btn-default">网页授权</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script type="text/javascript">
+    var account=null;
+    function setVisiable(error,right,reset){
+        document.getElementById("error_tips").style.display="none";
+        document.getElementById("right_display").style.display="none";
+        document.getElementById("reset_btn").style.display="none";
+        if(error){
+            document.getElementById("error_tips").style.display="block";
+        }
+        if(right){
+            document.getElementById("right_display").style.display="block";
+        }
+        if(reset){
+            document.getElementById("reset_btn").style.display="block";
+        }
+    }
+    async function detectMetaMask() {
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            setVisiable(true,false,false);
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                            setVisiable(false,false,true);
+                        }
+                    })
+
+                    // In the case they approve the log-in request, you'll receive their accounts:
+                    .then(function (accounts) {
+
+                        account=accounts[0];
+                        console.log(account);
+                        // if (ethereum.networkVersion !== desiredNetwork) {
+                        //     alert('This application requires the main network, please switch it in your MetaMask UI.')
+                        // }
+                        setVisiable(false,true,false);
+                    });
+
+            }else{
+                setVisiable(false,true,false);
+            }
+        }
+    }
+    window.onload=detectMetaMask();
+</script>
+<!-- 这里是底部，这里是底部，这里是底部，这里是底部，这里是底部，这里是底部，这里是底部，这里是底部，这里是底部，这里是底部 -->
+</body>
+</html>

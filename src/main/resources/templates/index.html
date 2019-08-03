@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+	<meta charset="utf-8">
+    <title>智慧链-区块链智慧教学系统</title>
+    <link rel="stylesheet" href="app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+	<link rel="stylesheet" href="app/css/dest/styles.css">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="img/logo_03.png">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown ">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                        课程
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="" href="courses/index.html" >全部课程</a></li>
+                        <li><a class="" href="courses/index.html?status=preview" >即将上线</a></li>
+                        <li><a class="" href="resource.html">开发者</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="paths/index.html">路径</a>
+                </li>
+                <li class="">
+                    <a href="questions/index.html">讨论区</a>
+                </li>
+                <li class=" bootcamp new-nav logo-1111">
+                    <a href="bootcamp/index.html">训练营</a>
+                    
+                </li>
+                <li class=" new-nav logo-1111">
+                    <a href="vip/index.html">会员</a>
+                    
+                </li>
+                
+            </ul>
+
+            
+            <div class="navbar-right btns" th:if="${user}==null">
+                <a class="btn btn-default navbar-btn sign-in" data-sign="signin" href="#sign-modal" data-toggle="modal">登录</a>
+            </div>
+            <div class="navbar-right btns" th:if="${user}!=null">
+                <span style="color: white;font-size: 20px;position: relative;top: 4px;right: 20px;">欢迎你，[[${user.uName}]]</span>
+                <a class="btn btn-default navbar-btn sign-up" href="/logout">注销</a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="layout-no-margin-top" style="margin-top: 50px;background: url('img/homepage-bg.png'); background-size: cover; background-repeat: no-repeat;">
+    <div class="banner-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-7">
+                    <a class="container-title">
+                        <img src="img/container-title-2.png" />
+                    </a>
+                    <div style="margin-top:24px;">
+                        <a id="course-btn" class="course-btn btn btn-lg" href="courses/index.html">查看帮助</a>
+                    </div>
+                </div>
+                
+                <div class="col-md-5" th:if="${user}==null">
+                    <form action="/register" method="post">
+                        <div class="form-group">
+                            <input class="form-control" name="account" type="text" placeholder="学号" required="required">
+                            <div class="help-block text-left"></div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="uName"  type="text" placeholder="昵称" required="required">
+                            <div class="help-block text-left"></div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="mail" type="email" placeholder="邮箱" required="required">
+                            <div class="help-block text-left"></div>
+                        </div>
+                        <div class="form-group">
+                            <input class="form-control" name="password" type="password" placeholder="密码" required="required">
+                            <div class="help-block text-left"></div>
+                        </div>
+                        <button class="btn register" type="submit">开启学习之旅</button>
+                    </form>
+                    <p style="color: red; font-weight: bold;font-size: 20px;position: relative;left: 50px;top: 25px;" th:if="${error_msg} != null">
+                        [[ ${error_msg} ]]
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>   
+</div>
+
+<div class="introduce-container" id="fourFeatures">
+    <div class="container">
+        <div class="row">
+            <div class="introduce-unit col-sm-6 col-md-3">
+                <div><a class="introduce-img"><img src="img/introduceContainer1.gif" /></a></div>
+                <div><span class="introduce-span">配套练习，高分攻略，及时复习。</span></div>
+            </div>
+            <div class="introduce-unit col-sm-6 col-md-3">
+                <div><a class="introduce-img"><img src="img/introduceContainer2.gif" /></a></div>
+                <div><span class="introduce-span">高效学习社区，遨游知识海洋</span></div>
+            </div>
+            <div class="introduce-unit col-sm-6 col-md-3">
+                <div><a class="introduce-img"><img src="img/introduceContainer3.gif" /></a></div>
+                <div><span class="introduce-span">教学资源科学管理，知识版权强力保护</span></div>
+            </div>
+            <div class="introduce-unit col-sm-6 col-md-3">
+                <div><a class="introduce-img"><img src="img/introduceContainer4.gif" /></a></div>
+                <div><span class="introduce-span">记录学信大数据，在线学业证书系统，高效查询与验证</span></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="line-and-laboratory">
+	<div class="container">
+        <div class="clearfix text-center item-header">
+            <span class="line"></span>
+            <div class="text-center item-title">我的课程</div>
+            <span class="line"></span>
+        </div>
+		<div class="clearfix courses">
+            <div class="col-md-3 col-sm-6  course">
+                <a class="course-box" href="courses/show.html">
+                    <div class="sign-box"> 
+                        <i class="fa fa-star-o course-follow pull-right"
+                            data-follow-url="/courses/1/follow"
+                            data-unfollow-url="/courses/1/unfollow"  style="display:none"  ></i>
+                    </div>
+                    <div class="course-img">
+                        <img alt="Linux 基础入门（新版）" src="img/ncn1.jpg">
+                    </div>
+                    <div class="course-body">
+                        <span class="course-title" data-toggle="tooltip" data-placement="bottom" title="Linux 基础入门（新版）">Linux 基础入门（新版）</span>
+                    </div>
+                </a>
+            </div>
+		</div>
+        <div class="clearfix item-footer">
+            <div class="pull-right watch-all">
+                <a href="courses/index.html">查看更多 ></a>
+            </div>
+        </div>
+	</div>
+</div>
+
+
+    <div class="modal fade" id="sign-modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <button type="button" class="close-modal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#signin-form" aria-controls="signin-form" role="tab" data-toggle="tab">登录</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active">
+                        <form action="/login" method="post">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-account" style="margin:0;"></i>
+                                    </div>
+                                    <input type="text" name="account" class="form-control" placeholder="请输入学号" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-lock" style="margin:0;"></i>
+                                    </div>
+                                    <input type="password" name="password" class="form-control" placeholder="请输入密码" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-primary" name="submit" type="submit" value="登录系统">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="app/dest/lib/lib.js"></script>
+<script src="static/jquery/2.2.4/jquery.min.js"></script>
+<script src="app/dest/frontend/index.js"></script>
+
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 clearfix footer-col">
+                <img src="img/logo_03.png">
+                <div class="footer-slogan">区块链教育应用探索</div>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">课程</div>
+                <a href="privacy/index.html" target="_blank">全部课程</a><br>
+                <a href="privacy/index.html" target="_blank">我的课程</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">资源管理</div>
+                <a href="privacy/index.html" target="_blank">资源列表</a><br>
+                <a href="labs/index.html" target="_blank">上传资源</a><br>
+                <a href="edu/index.html" target="_blank">查看消息</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">学习社区</div>
+                <a href="bootcamp/index.html" target="_blank">讨论区</a><br>
+                <a href="vip/index.html" target="_blank">学习成果</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">学信数据</div>
+                <a href="paths/index.html" target="_blank">电子证书</a><br>
+                <a href="paths/index.html" target="_blank">荣誉证明</a><br>
+                <a href="paths/index.html" target="_blank">成绩证明</a><br>
+                <a href="paths/index.html" target="_blank">信息授权</a><br>
+            </div>
+        </div>
+    </div>
+    <div class="text-center copyright">
+        <span>Copyright @2018-2019 区块链智慧教学系统</span>
+        <span class="ver-line"> | </span>
+        <a href="#" target="_blank">北京化工大学版权所有</a>
+
+    </div>
+</div>
+</body>
+</html>
