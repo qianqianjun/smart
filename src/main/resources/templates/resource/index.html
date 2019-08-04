@@ -113,7 +113,7 @@
         <div class="container">
             <div class="row" id="right_display" style="display: none;">
                 <div class="col-md-4">
-                    <a class="media" href="/resource/share" target="_blank">
+                    <a class="media" href="/resource/share" target="_blank" id="share_url">
                         <div class="media-left">
                             <img class="media-object" src="../img/1470893356136.png">
                         </div>
@@ -204,6 +204,7 @@
                     });
 
             }else{
+                account=provider.selectedAddress;
                 setVisiable(false,true,false);
             }
         }

@@ -8,6 +8,7 @@ public class UploadFile {
     private String fileDownloadUri;
     private String fileType;
     private long size;
+    private String cAddress;
     public UploadFile(String fileName, String fileDownloadUri, String fileType, long size) {
         this.fileName = fileName;
         this.fileDownloadUri = fileDownloadUri;

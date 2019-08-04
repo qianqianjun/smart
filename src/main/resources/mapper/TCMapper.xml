@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--author 高谦-->
+<mapper namespace="buct.qianqianjun.create.dao.TCDao">
+    <select id="getTCByTAddress" parameterType="STRING" resultType="buct.qianqianjun.create.domain.TC">
+        select * from tc where tc.taddress=#{tAddress};
+    </select>
+    <insert id="addTC" parameterType="buct.qianqianjun.create.domain.TC">
+        insert into tc values(#{tAddress},#{cAddress});
+    </insert>
+    <update id="fixByTC" parameterType="buct.qianqianjun.create.domain.TC">
+        update tc set tc.taddress=#{tAddress} , tc.caddress=#{cAddress} where tc.taddress=#{tAddress};
+    </update>
+    <delete id="deleteByTAddress" parameterType="STRING">
+        delete from tc where tc.taddress=#{tAddress};
+    </delete>
+</mapper>

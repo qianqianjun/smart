@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>资源发布 - 实验楼</title>
+    <link rel="stylesheet" href="../static/highlight.js/9.8.0/monokai-sublime.min.css">
+    <link rel="stylesheet" href="../app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../app/css/dest/styles.css">
+    <script src="../web3.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="../img/logo_03.png">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="dropdown ">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">
+                        课程
+                        <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="" href="/courses" >全部课程</a></li>
+                    </ul>
+                </li>
+                <li class="">
+                    <a href="/resource">资源</a>
+                </li>
+                <li class="">
+                    <a href="/exercise">练习</a>
+                </li>
+                <li class=" bootcamp new-nav logo-1111">
+                    <a href="/info">学信</a>
+
+                </li>
+                <li class=" new-nav logo-1111">
+                    <a href="/help">帮助</a>
+
+                </li>
+
+            </ul>
+
+            <div class="navbar-right btns" th:if="${user}==null" id="user_login_box">
+                <a class="btn btn-default navbar-btn sign-in" data-sign="signin" href="#sign-modal" data-toggle="modal">登录</a>
+            </div>
+            <div class="navbar-right btns" th:if="${user}!=null" id="user_info_box">
+                <span style="color: white;font-size: 20px;position: relative;top: 4px;right: 20px;">欢迎你，[[${user.uName}]]</span>
+                <a class="btn btn-default navbar-btn sign-up" href="/logout">注销</a>
+            </div>
+            <div style="color: white;font-size: 20px;line-height: 50px;float: right;" id="address_box">
+
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container layout layout-margin-top">
+    <div class="row">
+        <div class="col-md-9 layout-body">
+            <form role="form" id="singleUploadForm">
+                <div class="form-group">
+                    <label for="singleFileUploadInput">上传资源文件</label>
+                    <input type="file" id="singleFileUploadInput" style="padding: 6px;width: 100%;border: 1px solid #32f3eb;" />
+                </div>
+                <div id="singleFileUploadError" style="color: red;font-size: 15px;margin-bottom: 10px;"></div>
+                <input type="submit" value="上传到服务器" class="btn btn-default" id="uploadFile" style="margin-bottom: 20px;">
+            </form>
+            <form role="form" id="commit_to_blockchain">
+                <div class="form-group">
+                    <label for="rurl">资源地址</label>
+                    <input type="text" class="form-control" id="rurl" name="rurl" readonly="readonly" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="node_address">合约节点地址</label>
+                    <input type="text" class="form-control" id="node_address" name="node_address" readonly="readonly" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="rname">资源名称</label>
+                    <input type="text" class="form-control" id="rname" name="rname" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="rdes">资源描述</label>
+                    <textarea id="rdes" name="rdes" class="form-control" rows="4" required="required"> </textarea>
+                </div>
+                <button type="submit" class="btn btn-default" id="commitBtn">提交资源</button>
+            </form>
+        </div>
+        <div class="col-md-3 layout-side">
+            <div class="panel panel-default panel-userinfo">
+                <div class="panel-body body-userinfo">
+                    <div class="media userinfo-header">
+                        <div class="media-left">
+                            <div class="user-avatar">
+
+                                <a class="avatar" href="#sign-modal" data-toggle="modal" data-sign="signin">
+                                    <img class="circle" src="../img/logo-grey.png">
+                                </a>
+
+                            </div>
+                        </div>
+                        <div class="media-body">
+
+                            <span class="media-heading username">欢迎来到智慧链</span>
+                            <p class="vip-remain">探索区块链+教育模式</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebox">
+
+                <div class="sidebox-header">
+                    <h4 class="sidebox-title">最热路径</h4>
+                </div>
+                <div class="sidebox-body course-content side-list-body">
+                    <a href="/paths/python"><img style="width:25px;height:25px" src="../img/1471513769430.png"> Python 研发工程师</a>
+                    <a href="/paths/bigdata"><img style="width:25px;height:25px" src="../img/1471513926288.png"> 大数据工程师</a>
+                    <a href="/paths/cpp"><img style="width:25px;height:25px" src="../img/1471513793360.png"> C++ 研发工程师</a>
+                </div>
+
+            </div>
+
+            <div class="side-image side-qrcode">
+                <img src="../img/ShiyanlouQRCode.png">
+                <div class="side-image-text">关注公众号，手机看教程</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var account=null;
+    async function detectMetaMask() {
+        document.getElementById("user_login_box").style.display='none';
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+                        }
+                    })
+
+                    // In the case they approve the log-in request, you'll receive their accounts:
+                    .then(function (accounts) {
+
+                        account=accounts[0];
+                        console.log(account);
+                        // if (ethereum.networkVersion !== desiredNetwork) {
+                        //     alert('This application requires the main network, please switch it in your MetaMask UI.')
+                        // }
+                        document.getElementById("address_box").innerHTML="当前账户： "+account;
+                    });
+
+            }else{
+                account=provider.selectedAddress;
+                document.getElementById("address_box").innerHTML="当前账户： "+account;
+            }
+        }
+    }
+    window.onload=detectMetaMask();
+
+    var singleUploadForm = document.querySelector('#singleUploadForm');
+    var singleFileUploadInput = document.querySelector('#singleFileUploadInput');
+    var singleFileUploadError = document.querySelector('#singleFileUploadError');
+    function uploadSingleFile(file) {
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("tAddress",account);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/uploadFile");
+        xhr.onload = function() {
+            console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            if(xhr.status == 200) {
+                singleFileUploadError.style.display = "none";
+                document.getElementById("rurl").value =response.fileDownloadUri;
+                document.getElementById("node_address").value=response.caddress;
+            } else {
+                singleFileUploadError.innerHTML = (response && response.message) || "Some Error Occurred";
+            }
+        }
+
+        xhr.send(formData);
+    }
+    singleUploadForm.addEventListener('submit', function(event){
+        var files = singleFileUploadInput.files;
+        var rurl=document.getElementById("rurl");
+        rurl.innerText="";
+        if(files.length === 0) {
+            singleFileUploadError.innerHTML = "Please select a file";
+            singleFileUploadError.style.display = "block";
+        }
+        uploadSingleFile(files[0]);
+        event.preventDefault();
+    }, true);
+
+
+    var commitForm=document.querySelector("#commit_to_blockchain");
+
+    commitForm.addEventListener('submit', function(event){
+        var resourceUrl=document.querySelector("#rurl").value;
+        var nodeAddress=document.querySelector("#node_address").value;
+        var resourceName=document.querySelector("#rname").value;
+        var resourceDes=document.querySelector("#rdes").value;
+        if(resourceDes=='' || resourceName=='' || nodeAddress=='' || resourceUrl==''){
+            alert("信息不完整！");
+            event.preventDefault();
+        }
+        else{
+            // 这里写区块链与智能合约的交互代码：
+
+            event.preventDefault();
+        }
+    }, true);
+</script>
+</body>
+</html>

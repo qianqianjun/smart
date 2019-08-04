@@ -1,0 +1,19 @@
+package buct.qianqianjun.create.service;
+
+import buct.qianqianjun.create.dao.TCDao;
+import buct.qianqianjun.create.domain.TC;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class TCService {
+    @Autowired
+    private TCDao tcDao;
+    public TC getByTAddress(String tAddress){
+        if(tAddress.equals("")){
+            return null;
+        }
+        TC res=tcDao.getTCByTAddress(tAddress);
+        return res;
+    }
+}

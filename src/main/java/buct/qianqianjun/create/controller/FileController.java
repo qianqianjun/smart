@@ -1,6 +1,8 @@
 package buct.qianqianjun.create.controller;
+import buct.qianqianjun.create.domain.TC;
 import buct.qianqianjun.create.domain.UploadFile;
 import buct.qianqianjun.create.service.FileService;
+import buct.qianqianjun.create.service.TCService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +24,24 @@ public class FileController {
 
     @Autowired
     private FileService fileService;
+    @Autowired
+    private TCService tcService;
 
     @PostMapping("/uploadFile")
-    public UploadFile uploadFile(@RequestParam("file") MultipartFile file){
+    public UploadFile uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("tAddress") String taddress){
         String fileName = fileService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(fileName)
                 .toUriString();
-
-        return new UploadFile(fileName, fileDownloadUri,
+        UploadFile result=new UploadFile(fileName, fileDownloadUri,
                 file.getContentType(), file.getSize());
+        TC tc=tcService.getByTAddress(taddress);
+        String cAddress=tc.getCAddress();
+        result.setCAddress(cAddress);
+        System.out.println(cAddress);
+        return result;
     }
 
 
