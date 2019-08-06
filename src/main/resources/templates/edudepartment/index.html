@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>智慧链-创建学校</title>
+    <link rel="stylesheet" href="../app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../app/css/dest/styles.css">
+    <script src="web3.min.js"></script>
+    <script src="../abiset.js"></script>
+</head>
+<body>
+<div class="org-body">
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="schoolName">学校名称</label>
+                        <input type="text" class="form-control" id="schoolName" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="principle">校长地址</label>
+                        <input type="text" class="form-control" id="principle"  required="required"/>
+                    </div>
+                    <input type="button" class="btn btn-default" value="创建" onclick="submitToChain()" id="btn_submit">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var account=null;
+    var web = new Web3(window.web3.currentProvider);
+    var eduDepertment=null;
+    async function detectMetaMask() {
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            alert("您没有安装 metamask 插件，请安装插件后重启浏览器进行使用！");
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                        }
+                    })
+
+                    // In the case they approve the log-in request, you'll receive their accounts:
+                    .then(function (accounts) {
+
+                        account=accounts[0];
+                        console.log(account);
+                        // if (ethereum.networkVersion !== desiredNetwork) {
+                        //     alert('This application requires the main network, please switch it in your MetaMask UI.')
+                        // }
+
+                    });
+
+            }else{
+                account=provider.selectedAddress;
+            }
+        }
+    }
+    window.onload=detectMetaMask();
+    console.log(account);
+
+    var createSchoolForm=document.querySelector("#createSchoolForm");
+    async function submitToChain() {
+        var schoolName=document.querySelector("#schoolName").value;
+        var principleAddress=document.querySelector("#principle").value;
+        document.getElementById("btn_submit").disabled=true;
+        if(schoolName=='' || principleAddress==''){
+            alert("请您填写完整的信息");
+        }
+        else {
+            // 与区块链进行交互账号
+            console.log(schoolName);
+            eduDepertment = new web.eth.Contract(eduDepartmentAbi, eduDepartmentAddress);
+            await eduDepertment.methods.addSchool(web.utils.stringToHex(schoolName),principleAddress).send({
+                from :account,
+                gas:3000000
+            });
+
+            var schoolAddress=null;
+            await eduDepertment.methods.getSchoolByName(web.utils.stringToHex(schoolName)).call((error,res)=>{
+                schoolAddress=res;
+                console.log(schoolAddress);
+            });
+
+            var school=new web.eth.Contract(schoolAbi,schoolAddress);
+
+            // var school=new web.eth.Contract(schoolAbi,"0xDe3881A999996BF7D9B51D9282dF50a00B8DA8Bc");
+            // principleAddress="0xEaDa7231B4F242f2384F35573948634cf282c820";
+            // var schoolAddress="0xDe3881A999996BF7D9B51D9282dF50a00B8DA8Bc";
+            school.methods.getFullName().call((error,res)=>{
+                var add=web.utils.hexToString(res)
+                console.log(add);
+                var formData=new FormData();
+                formData.append("paddress",principleAddress);
+                formData.append("saddress",schoolAddress);
+                var xhr=new XMLHttpRequest();
+                xhr.open("POST","/school/addps");
+
+                // 清华大学
+                // 地址为：0xDe3881A999996BF7D9B51D9282dF50a00B8DA8Bc
+                // 校长为：0xEaDa7231B4F242f2384F35573948634cf282c820
+                var success=true;
+                xhr.onload=function(){
+                    if(xhr.responseText!=""){
+                        var response=JSON.parse(xhr.responseText);
+                        if(response.status==200){
+                            console.log(response);
+                        }
+                        else{
+                            success=false;
+                        }
+                    }
+                    else{
+                        alert("服务器发生故障");
+                    }
+                }
+                xhr.send(formData);
+                if(success)
+                    alert("您已经成功添加 "+add+" 地址为："+schoolAddress+" 校长地址为："+principleAddress);
+                else{
+                    alert("添加失败，请检查！");
+                }
+            });
+            document.getElementById("btn_submit").disabled=false;
+        }
+    }
+</script>
+</body>
+</html>

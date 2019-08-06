@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--author 高谦-->
+<mapper namespace="buct.qianqianjun.create.dao.PSDao">
+    <select id="getByPaddress" parameterType="STRING" resultType="buct.qianqianjun.create.domain.PS">
+        select * from ps where ps.paddress=#{paddress};
+    </select>
+    <insert id="addPS" parameterType="buct.qianqianjun.create.domain.PS">
+        insert into ps values(#{paddress},#{saddress});
+    </insert>
+</mapper>

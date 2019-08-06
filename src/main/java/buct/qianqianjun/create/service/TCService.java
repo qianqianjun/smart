@@ -16,4 +16,15 @@ public class TCService {
         TC res=tcDao.getTCByTAddress(tAddress);
         return res;
     }
+
+    public TC addTC(String taddress, String caddress) {
+        if(taddress.equals("") || caddress.equals("")){
+            return null;
+        }
+        TC tc=new TC();
+        tc.setCAddress(caddress);
+        tc.setTAddress(taddress);
+        tcDao.addTC(tc);
+        return tc;
+    }
 }
