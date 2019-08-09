@@ -40,7 +40,6 @@ public class FileController {
         TC tc=tcService.getByTAddress(taddress);
         String cAddress=tc.getCAddress();
         result.setCAddress(cAddress);
-        System.out.println(cAddress);
         return result;
     }
 

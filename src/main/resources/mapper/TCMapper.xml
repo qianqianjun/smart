@@ -16,4 +16,13 @@
     <delete id="deleteByTAddress" parameterType="STRING">
         delete from tc where tc.taddress=#{tAddress};
     </delete>
+
+
+    <resultMap id="cao" type="buct.qianqianjun.create.domain.TC">
+        <id column="taddress" javaType="String" jdbcType="VARCHAR" property="tAddress"></id>
+        <result column="caddress" javaType="String" jdbcType="VARCHAR" property="cAddress"></result>
+    </resultMap>
+    <select id="getAll" resultMap="cao">
+        select * from tc;
+    </select>
 </mapper>

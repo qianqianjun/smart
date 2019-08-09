@@ -113,37 +113,37 @@
         var taddress=document.querySelector("#taddress").value;
         if(teacherName=='' || taddress==''){
             alert("请您将信息填写完整");
-        }else{
+        }else {
             // 这里写和区块链的交互操作；
             // 将信息写入区块链：
-            await school.methods.addTeacher(web.utils.stringToHex(teacherName),taddress).send({
-                from:account,
-                gas:3000000
+            await school.methods.addTeacher(web.utils.stringToHex(teacherName), taddress).send({
+                from: account,
+                gas: 3000000
             });
-            await school.methods.getTeacherByTAddress(taddress).call((error,res)=>{
-                caddress=res;
+            await school.methods.getTeacherByTAddress(taddress).call((error, res) => {
+                caddress = res;
             });
-            var formData=new FormData();
-            formData.append("taddress",taddress);
-            formData.append("caddress",caddress);
-            xhr=new XMLHttpRequest();
-            xhr.open("POST","/school/addtc");
-            var success=true;
-            xhr.onload=function () {
-                if(xhr.responseText!=""){
-                    var response=JSON.parse(xhr.responseText);
-                    if(response.status==200){
-                        console.log(response);
-                    }
-                    else{
-                        success=false;
-                    }
+            var formData = new FormData();
+            formData.append("taddress", taddress);
+            formData.append("caddress", caddress);
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "/school/addtc");
+            var success = true;
+            xhr.onload = function () {
+                if (xhr.responseText != "") {
+                    success=true;
                 }
-                else{
+                else {
                     alert("服务器发生故障");
                 }
             };
             xhr.send(formData);
+            if (success) {
+                alert("您已经成功添加 " + teacherName + " 老师，教师地址为：" + taddress + " 教师合约地址为：" + caddress);
+            } else {
+                alert("数据已经写入区块链，但是数据库写入失败，请检查，您也可以复制控制台代码重新写入");
+                console.log("taddress 为" + taddress + "合约地址为：" + caddress);
+            }
         }
     }
 </script>

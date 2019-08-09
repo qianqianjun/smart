@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>资源管理 - 智慧链</title>
+    <link rel="stylesheet" href="../static/highlight.js/9.8.0/monokai-sublime.min.css">
+    <link rel="stylesheet" href="../app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../app/css/dest/styles.css">
+    <script src="../web3.min.js"></script>
+    <script src="../abiset.js"></script>
+</head>
+
+<body>
+<nav class="navbar navbar-default navbar-fixed-top header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="../img/logo_03.png">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a href="/market" target="_blank">市场</a>
+                </li>
+                <li class="">
+                    <a href="/resource" target="_blank">资源</a>
+                </li>
+                <li class="">
+                    <a href="/exercise" target="_blank">练习</a>
+                </li>
+                <li class=" bootcamp new-nav logo-1111">
+                    <a href="/info" target="_blank">学信</a>
+                </li>
+                <li class=" new-nav logo-1111">
+                    <a href="/help" target="_blank">帮助</a>
+                </li>
+            </ul>
+            <div style="color: white;font-size: 20px;line-height: 50px;float: right;" id="address_box">
+
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container layout layout-margin-top">
+    <ol class="breadcrumb">
+        <li><a href="/resource">资源</a></li>
+        <li class="active">
+            <a href="/courses/">资源管理</a>
+        </li>
+    </ol>
+    <div class="row">
+        <div class="col-md-9 layout-body">
+            <div class="content">
+                <div class="discovery-list">
+                    <div class="discovery-title">
+                        <img class="pull-left" src="../img/share-reports.png">
+                        <div class="pull-left discovery-title-text">
+                            <strong>资源列表</strong><span>（对资源做相应的操作，直接同步到区块链中）</span>
+                        </div>
+                    </div>
+
+                    <div class="row report-items" id="resource_list">
+                        <!--下面是一个资源的项目样式-->
+                        <!--资源项目样式结束-->
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 layout-side">
+            <form class="side-search-input" method="get">
+                <div class="input-group">
+                    <input class="form-control" type="text" name="search" placeholder="搜索...">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </form>
+            <div class="sidebox">
+                <div class="sidebox-header">
+                    <h4 class="sidebox-title">标签</h4>
+                </div>
+                <div class="sidebox-body">
+                    <div class="tags">
+                        <a class="tag tag-success active">全部</a></li>
+                        <a class="tag tag-success">NoSQL</a>
+                        <a class="tag tag-success">算法</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="sign_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document">
+        <div class="modal-content">
+            <button type="button" class="close-modal" onclick="closeShadow()"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#signin-form" aria-controls="signin-form" role="tab" data-toggle="tab">资源信息修改</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active">
+                        <form>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-account" style="margin:0;"></i>
+                                    </div>
+                                    <input type="text" id="resource_name" class="form-control" placeholder="资源名称" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-lock" style="margin:0;"></i>
+                                    </div>
+                                    <input type="text" id="resource_price" class="form-control" placeholder="资源价格" required="required">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-primary" type="button" value="提交修改" onclick="toBlockChain(this)">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in" id="black_window_shadow" style="display: none;"></div>
+<script type="text/javascript">
+    var account=null;
+    var caddress=null;
+    var web=new Web3(window.web3.currentProvider);
+    var resource_name=null;
+    var resource_price=null;
+    var resource_address=null;
+    function closeShadow(){
+        document.getElementById("black_window_shadow").style.display="none";
+        document.getElementById("sign_modal").style.display="none";
+        document.getElementById("sign_modal").setAttribute("class","modal fade");
+    }
+    // 修改当前区块链中的资源信息。
+    function showShadow(res_address,res_name,res_price){
+        document.getElementById("black_window_shadow").style.display="block";
+        document.getElementById("sign_modal").style.display="block";
+        document.getElementById("sign_modal").setAttribute("class","modal fade in");
+        resource_name=res_name;
+        resource_price=res_price;
+        resource_address=res_address;
+        document.getElementById("resource_name").value=resource_name;
+        document.getElementById("resource_price").value=resource_price;
+    }
+    async function toBlockChain(obj){
+        obj.disabled=true;
+        var new_res_name=document.getElementById("resource_name").value;
+        var new_price=document.getElementById("resource_price").value;
+        var resource=new web.eth.Contract(resourceAbi,resource_address);
+        if(new_res_name!=resource_name){
+            await resource.methods.setRname(web.utils.stringToHex(new_res_name)).send({
+                from:account,
+                gas:3000000
+            });
+        }
+        if(new_price!=resource_price){
+            await resource.methods.setPrice(new_price).send({
+                from:account,
+                gas:3000000
+            });
+        }
+        alert("修改成功！刷新页面显示最新信息");
+        obj.disabled=false;
+        closeShadow();
+    }
+    // 检查当前浏览器是否已经安装metamask插件
+    async function detectMetaMask() {
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+                        }
+                    })
+                    .then(function (accounts) {
+
+                        account=accounts[0];
+                        console.log(account);
+                        document.getElementById("address_box").innerHTML="当前账户： "+account;
+                    });
+
+            }else{
+                account=provider.selectedAddress;
+                document.getElementById("address_box").innerHTML="当前账户： "+account;
+            }
+        }
+    }
+    // 添加资源项目
+    function addItem(res_name,a_a_value,r_a_value,price){
+        var div=document.createElement("div");
+        div.setAttribute("class","col-md-6 report-item clearfix");
+        var a=document.createElement("a");
+        var name_div=document.createElement("div");
+        name_div.setAttribute("class","report-item-course");
+        name_div.innerHTML=res_name+"<img src='../img/fix.png' onclick=\"showShadow('"+r_a_value+"','"+res_name+"','"+price+"')\" style='width: 20px;float:right;'>";
+        a.appendChild(name_div);
+        var author_address_div=document.createElement("div");
+        author_address_div.setAttribute("class","report-item-lab");
+        author_address_div.innerHTML="作者地址";
+        a.appendChild(author_address_div);
+        var a_a_value_div=document.createElement("div");
+        a_a_value_div.setAttribute("class","tags");
+        a_a_value_div.innerHTML="<span class='tag tag-primary'>"+a_a_value+"</span>";
+        a.appendChild(a_a_value_div);
+
+        var resource_address_div=document.createElement("div");
+        resource_address_div.setAttribute("class","report-item-lab");
+        resource_address_div.innerHTML="资源地址";
+        a.appendChild(resource_address_div);
+        var r_a_value_div=document.createElement("div");
+        r_a_value_div.setAttribute("class","tags");
+        r_a_value_div.innerHTML="<span class='tag tag-primary'>"+r_a_value+"</span>";
+        a.appendChild(r_a_value_div);
+
+        var price_div=document.createElement("div");
+        price_div.setAttribute("class","report-item-count");
+        price_div.innerHTML="<span>"+price+" wei</span><div class='report-item-arrow'><div class='report-item-arrow-line'></div></div>";
+        a.appendChild(price_div);
+        var btn_div=document.createElement("div");
+        var res_hex_name=web.utils.stringToHex(res_name);
+        btn_div.innerHTML='<input type="button" class="btn btn-default" value="版 权 转 移" style="width: 40%;float: right;margin-top:15px;" onclick="transfor(\''+r_a_value+'\',\''+res_hex_name+'\')">';
+        a.appendChild(btn_div);
+        div.appendChild(a);
+        document.getElementById("resource_list").appendChild(div);
+    }
+    // 从区块链读取数据进行展示
+    async function readItemFromBlockChain(teacher_contract_address){
+        var teacher=new web.eth.Contract(teacherAbi,teacher_contract_address);
+        var length=0;
+        await teacher.methods.getResourcesCount().call((error,res)=>{length=res;});
+        for(var i=0;i<length;i++){
+            await teacher.methods.getResourceByIndex(i).call(async (err,rval)=>{
+                if(rval[1]) {
+                    raddress=rval[0];
+                    var resource = new web.eth.Contract(resourceAbi, raddress);
+                    var rname = await resource.methods.getRname().call();
+                    rname = web.utils.hexToString(rname);
+                    var price = await resource.methods.getPrice().call();
+                    console.log(price);
+                    var author_address = await resource.methods.getOwner().call();
+                    console.log(author_address);
+                    addItem(rname, author_address, raddress, price);
+                }
+            });
+        }
+    }
+    // 检查当前账户是不是老师
+    async function checkIfTeacher(){
+        var success=false;
+        var formData=new FormData();
+        formData.append("taddress",account);
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","/resource/getcaddress");
+        xhr.onload=function(){
+            if(xhr.responseText!=''){
+                var response=JSON.parse(xhr.responseText);
+                caddress=response.caddress;
+                readItemFromBlockChain(caddress);
+            }else{
+                document.getElementsByTagName("body")[0].style.display='none';
+                alert("你不是教师身份，无法获取合约地址！");
+                success=false;
+            }
+        }
+        xhr.send(formData);
+    }
+    async function transfor(raddress,resourceName){
+        var name=prompt("您确认要将资源版权进行转移么？确认的话请在下面填写正确的教师地址！注意，此操作无法撤回！");
+        if(name!=null){
+            var formData=new FormData();
+            var xhr=new XMLHttpRequest();
+            formData.append("taddress",name);
+            xhr.open("POST","/resource/getcaddress");
+            xhr.onload=async function () {
+                console.log(xhr);
+                if(xhr.responseText!="" && xhr.status==200){
+                    var response=JSON.parse(xhr.responseText);
+                    var other_teacher=response.caddress;
+                    var res_address=raddress;
+                    var res_name=resourceName;
+                    var teacher=new web.eth.Contract(teacherAbi,caddress);
+                    await teacher.methods.transformResource(other_teacher,res_name,res_address).send({
+                        from:account,
+                        gas:3000000
+                    });
+                    alert("版权转移成功！");
+                }else{
+                    alert("错误，该地址不是教师身份，无法进行资源转移");
+                }
+            }
+            xhr.send(formData);
+
+        }else{
+            alert("您已经取消版权转移操作！");
+        }
+    }
+    window.onload=function () {
+        detectMetaMask();
+        checkIfTeacher();
+    }
+</script>
+</body>
+</html>

@@ -9,24 +9,39 @@ contract Resource{
     // the price of the resource.
     uint32 price;
     // the record of the resource.
-    string[] messages;
+    struct Message{
+        uint256 time;
+        uint8 Type;
+        address Buyer;
+        address value;
+        address OldOwner;
+        address NewOwner;
+    }
+    Message[] messages;
     // the buyer of the Resource
     address[] buyers;
     // the mapper of the buyer;
     mapping(address=>uint8) buyerMapper;
-    function Resource(string _rname,uint32 _price,address _owner) public{
+    function Resource(string _rname,uint32 _price,address _owner,string _url) public{
         owner=_owner;
         rname=_rname;
         price=_price;
+        url=_url;
     }
     function getBuyerLength() public view returns(uint) {
-        return messages.length;
+        return buyers.length;
     }
     function buy() public payable{
         require(msg.value==price);
         buyers.push(msg.sender);
         buyerMapper[msg.sender]=1;
+        Message memory mess=Message(now,1,msg.sender,price,owner,owner);
+        messages.push(mess);
         owner.transfer(price);
+    }
+
+    function getBuyerByAddress(address add) public view returns(uint8){
+        return buyerMapper[add];
     }
 
     function setRname(string new_rname) public{
@@ -44,7 +59,6 @@ contract Resource{
         return url;
     }
     function setOwner(address new_owner) public{
-        require(msg.sender==owner);
         owner=new_owner;
     }
     function getOwner() public view returns(address){
@@ -56,24 +70,29 @@ contract Resource{
     function setPrice(uint32 new_price) public{
         price=new_price;
     }
+    function getIndexKey() public view returns(bytes32){
+        return sha256(rname);
+    }
 }
 
 contract Teacher{
     // the name of the teacher.
     string public tname;
-    // the number of the teacher to identify among teachers.
-    uint32 public tnumber;
     // the status of the teacher.
     bool public status;
     // the resource which the teaccher publish.
     address [] public resources;
     mapping(bytes32 => Resource ) resourceMapper;
+    mapping(bytes32 => Resource) Null;
     // the id of the teacher.
     address public owner;
     // constructor
     function Teacher(string _name,address _owner) public{
         tname=_name;
         owner=_owner;
+    }
+    function getResourcesCount() public view returns(uint){
+        return resources.length;
     }
     function setTname(string _name) public{
         require(owner==msg.sender);
@@ -91,9 +110,9 @@ contract Teacher{
         return status;
     }
 
-    function addResource(string res_name,uint32 price) public{
+    function addResource(string res_name,uint32 price,string url) public{
         require(owner==msg.sender);
-        Resource res=new Resource(res_name,price,owner);
+        Resource res=new Resource(res_name,price,owner,url);
         bytes32 index=sha256(res_name);
         resourceMapper[index]=res;
         resources.push(res);
@@ -102,9 +121,34 @@ contract Teacher{
         bytes32 index=sha256(_name);
         return resourceMapper[index];
     }
+
     function deleteResourceByName(string _name) public{
         require(msg.sender==owner);
         bytes32 index=sha256(_name);
+        delete(resourceMapper[index]);
+    }
+
+    function getResourceByIndex(uint i) public view returns(Resource,bool){
+        require(i<resources.length);
+        Resource res=Resource(resources[i]);
+        bytes32 index=res.getIndexKey();
+        if(resourceMapper[index]==Null[index]){
+            return (res,false);
+        }else{
+            return (res,true);
+        }
+    }
+
+    function receiveResource(string res_name,address res_address) public{
+        bytes32 index=sha256(res_name);
+        resourceMapper[index]=Resource(res_address);
+        resources.push(Resource(res_address));
+    }
+
+    function transformResource(address other_teacher,string res_name,address res_address) public {
+        Teacher other=Teacher(other_teacher);
+        other.receiveResource(res_name,res_address);
+        bytes32 index=sha256(res_name);
         delete(resourceMapper[index]);
     }
 }
@@ -116,7 +160,7 @@ contract School{
     // the manager of the educational
     EduDepartment public  edudepartment;
     // teacher set of the school.
-    Teacher[] teachers;
+    Teacher[] public teachers;
     mapping(address=>Teacher) teacherMapper;
     // the constructor of the contract.
     function School(string _name,address _principal,EduDepartment father) public{
@@ -189,5 +233,3 @@ contract EduDepartment{
         return mapper[code];
     }
 }
-
-

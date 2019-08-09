@@ -5,6 +5,9 @@ import buct.qianqianjun.create.domain.TC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class TCService {
     @Autowired
@@ -26,5 +29,9 @@ public class TCService {
         tc.setTAddress(taddress);
         tcDao.addTC(tc);
         return tc;
+    }
+
+    public List<TC> getAllTc() {
+        return  tcDao.getAll();
     }
 }

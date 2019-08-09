@@ -1,5 +1,5 @@
 // 这行要替换为edu的 address
-const eduDepartmentAddress="0xd80d1131ca21a2060c7af7a784a63c9c9942e378";
+const eduDepartmentAddress="0x30357414aae9e47a781939b5312193fc4178bc64";
 
 const eduDepartmentAbi=[
     {
@@ -156,6 +156,20 @@ const resourceAbi=[
         "type": "function"
     },
     {
+        "constant": true,
+        "inputs": [],
+        "name": "getIndexKey",
+        "outputs": [
+            {
+                "name": "",
+                "type": "bytes32"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
         "constant": false,
         "inputs": [
             {
@@ -236,6 +250,25 @@ const resourceAbi=[
     },
     {
         "constant": true,
+        "inputs": [
+            {
+                "name": "add",
+                "type": "address"
+            }
+        ],
+        "name": "getBuyerByAddress",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint8"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
         "inputs": [],
         "name": "getUrl",
         "outputs": [
@@ -275,6 +308,10 @@ const resourceAbi=[
             {
                 "name": "_owner",
                 "type": "address"
+            },
+            {
+                "name": "_url",
+                "type": "string"
             }
         ],
         "payable": false,
@@ -288,6 +325,25 @@ const schoolAbi=[
         "constant": true,
         "inputs": [],
         "name": "edudepartment",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "teachers",
         "outputs": [
             {
                 "name": "",
@@ -457,6 +513,20 @@ const teacherAbi=[
     },
     {
         "constant": true,
+        "inputs": [],
+        "name": "getResourcesCount",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
         "inputs": [
             {
                 "name": "_name",
@@ -511,6 +581,28 @@ const teacherAbi=[
         "constant": false,
         "inputs": [
             {
+                "name": "res_name",
+                "type": "string"
+            },
+            {
+                "name": "price",
+                "type": "uint32"
+            },
+            {
+                "name": "url",
+                "type": "string"
+            }
+        ],
+        "name": "addResource",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
                 "name": "_name",
                 "type": "string"
             }
@@ -533,6 +625,24 @@ const teacherAbi=[
         ],
         "payable": false,
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "res_name",
+                "type": "string"
+            },
+            {
+                "name": "res_address",
+                "type": "address"
+            }
+        ],
+        "name": "receiveResource",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -578,38 +688,6 @@ const teacherAbi=[
         "type": "function"
     },
     {
-        "constant": false,
-        "inputs": [
-            {
-                "name": "res_name",
-                "type": "string"
-            },
-            {
-                "name": "price",
-                "type": "uint32"
-            }
-        ],
-        "name": "addResource",
-        "outputs": [],
-        "payable": false,
-        "stateMutability": "nonpayable",
-        "type": "function"
-    },
-    {
-        "constant": true,
-        "inputs": [],
-        "name": "tnumber",
-        "outputs": [
-            {
-                "name": "",
-                "type": "uint32"
-            }
-        ],
-        "payable": false,
-        "stateMutability": "view",
-        "type": "function"
-    },
-    {
         "constant": true,
         "inputs": [],
         "name": "owner",
@@ -617,6 +695,51 @@ const teacherAbi=[
             {
                 "name": "",
                 "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "other_teacher",
+                "type": "address"
+            },
+            {
+                "name": "res_name",
+                "type": "string"
+            },
+            {
+                "name": "res_address",
+                "type": "address"
+            }
+        ],
+        "name": "transformResource",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "i",
+                "type": "uint256"
+            }
+        ],
+        "name": "getResourceByIndex",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            },
+            {
+                "name": "",
+                "type": "bool"
             }
         ],
         "payable": false,
