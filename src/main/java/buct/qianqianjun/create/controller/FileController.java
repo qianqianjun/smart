@@ -1,7 +1,9 @@
 package buct.qianqianjun.create.controller;
+import buct.qianqianjun.create.domain.SC;
 import buct.qianqianjun.create.domain.TC;
 import buct.qianqianjun.create.domain.UploadFile;
 import buct.qianqianjun.create.service.FileService;
+import buct.qianqianjun.create.service.SCService;
 import buct.qianqianjun.create.service.TCService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +28,8 @@ public class FileController {
     private FileService fileService;
     @Autowired
     private TCService tcService;
+    @Autowired
+    private SCService scService;
 
     @PostMapping("/uploadFile")
     public UploadFile uploadFile(@RequestParam("file") MultipartFile file,@RequestParam("tAddress") String taddress){
@@ -43,13 +47,24 @@ public class FileController {
         return result;
     }
 
+    @PostMapping("/uploadcertificate")
+    public UploadFile upload(@RequestParam("file") MultipartFile file,@RequestParam("saddress") String saddress){
+        String fileName = fileService.storeFile(file);
 
-//    @PostMapping("/uploadMultipleFiles")
-//    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
-//        return Arrays.stream(files)
-//                .map(this::uploadFile)
-//                .collect(Collectors.toList());
-//    }
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/downloadFile/")
+                .path(fileName)
+                .toUriString();
+        UploadFile result=new UploadFile(fileName, fileDownloadUri,
+                file.getContentType(), file.getSize());
+        SC sc=scService.getBySaddress(saddress);
+        if(sc==null){
+            return result;
+        }else {
+            result.setCAddress(sc.getCaddress());
+            return result;
+        }
+    }
 
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {

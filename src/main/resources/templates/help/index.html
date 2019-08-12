@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>帮助-智慧链</title>
+    <link rel="stylesheet" href="app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app/css/dest/styles.css">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="img/logo_03.png">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a href="/market" target="_blank">市场</a>
+                </li>
+                <li class="">
+                    <a href="/resource" target="_blank">资源</a>
+                </li>
+                <li class="">
+                    <a href="/exercise" target="_blank">练习</a>
+                </li>
+                <li class=" bootcamp new-nav logo-1111">
+                    <a href="/info" target="_blank">学信</a>
+                </li>
+                <li class=" new-nav logo-1111">
+                    <a href="/help" target="_blank">帮助</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="vip-faq">
+    <div class="container">
+        <div class="vip-faq-header">
+            <img src="../img/vip-faq.png">
+            FAQ
+            <span></span>
+        </div>
+        <div class="vip-faq-body">
+            <h4>使用该系统需要有哪些条件？</h4>
+            <div>1. 基础条件，可以上网的计算机</div>
+            <div>2. 安装 <a href="https://metamask.io/">metamask </a> 插件，作为电子钱包，管理账户信息</div>
+            <div>3. 按照metamask 提示来操作，注册账户，登录</div>
+            <div>4. 牢记助记词，牢记助记词，牢记助记词！丢失后无法找回！</div>
+        </div>
+        <div class="vip-faq-body">
+            <h4>该系统有哪些功能</h4>
+            <div>1. 资源发布与分享，资源市场浏览。</div>
+            <div>2. 资源版权保护，下载资源的花费直接递交作者账户</div>
+            <div>3. 记录学信大数据，开放查询，用人单位一键验证，省时省力。</div>
+            <div>4. 课下自主学习社区，提供练习和讨论，期末测评表现。</div>
+        </div>
+        <div class="vip-faq-body">
+            <h4>系统和区块链是怎样的关系</h4>
+            <div>1. 系统采用的是spring boot + mybatis + 前端界面来进行功能接口的展示</div>
+            <div>2. 区块链使用以太坊，智能合约使用solidity 语言开发，目前部署在 Rinkeby 测试网络</div>
+            <div>3. 系统与区块链使用web3js 进行交互，对区块链的各种请求均不通过服务器，服务器仅仅返回静态页面</div>
+            <div>4. 该系统被攻击后用户账户不会遭受任何损失，仅仅在短时间内无法通过网页访问区块链（使用命令行依旧可以直接访问）</div>
+        </div>
+        <div class="vip-faq-body">
+            <h4>该系统和比特币是怎样的关系，是否需要挖矿？</h4>
+            <div>1. 该系统和比特币的关系类似于java 和 JavaScript 的关系。</div>
+            <div>2. 挖矿的本质是在将信息写入区块链，系统底层采用以太坊区块链，集成了点对点网络，各种路由协议，共识机制等，对用户透明。</div>
+        </div>
+    </div>
+</div>
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 clearfix footer-col">
+                <img src="img/logo_03.png">
+                <div class="footer-slogan">区块链教育应用探索</div>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">课程</div>
+                <a href="privacy/index.html" target="_blank">全部课程</a><br>
+                <a href="privacy/index.html" target="_blank">我的课程</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">资源管理</div>
+                <a href="privacy/index.html" target="_blank">资源列表</a><br>
+                <a href="labs/index.html" target="_blank">上传资源</a><br>
+                <a href="edu/index.html" target="_blank">查看消息</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">学习社区</div>
+                <a href="bootcamp/index.html" target="_blank">讨论区</a><br>
+                <a href="vip/index.html" target="_blank">学习成果</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">学信数据</div>
+                <a href="paths/index.html" target="_blank">电子证书</a><br>
+                <a href="paths/index.html" target="_blank">荣誉证明</a><br>
+                <a href="paths/index.html" target="_blank">成绩证明</a><br>
+                <a href="paths/index.html" target="_blank">信息授权</a><br>
+            </div>
+        </div>
+    </div>
+    <div class="text-center copyright">
+        <span>Copyright @2018-2019 区块链智慧教学系统</span>
+        <span class="ver-line"> | </span>
+        <a href="#" target="_blank">北京化工大学版权所有</a>
+    </div>
+</div>
+</body>
+</html>

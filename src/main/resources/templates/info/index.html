@@ -1,0 +1,197 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>学信数据 - 智慧链</title>
+    <link rel="stylesheet" href="../static/highlight.js/9.8.0/monokai-sublime.min.css">
+    <link rel="stylesheet" href="../app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../app/css/dest/styles.css">
+    <script src="../web3.min.js"></script>
+    <script src="../abiset.js"></script>
+    <style>
+        .bootcamp-courses-media img{
+            height: 250px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="../img/logo_03.png">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a href="/market" target="_blank">市场</a>
+                </li>
+                <li class="">
+                    <a href="/resource" target="_blank">资源</a>
+                </li>
+                <li class="">
+                    <a href="/exercise" target="_blank">练习</a>
+                </li>
+                <li class=" bootcamp new-nav logo-1111">
+                    <a href="/info" target="_blank">学信</a>
+                </li>
+                <li class=" new-nav logo-1111">
+                    <a href="/help" target="_blank">帮助</a>
+                </li>
+            </ul>
+            <div style="color: white;font-size: 20px;line-height: 50px;float: right;" id="address_box">
+
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="bootcamp-description layout-no-margin-top">
+    <div>
+        <h1>学信数据一键查验</h1>
+        <h4>高效连接学校和用人单位，学信数据，荣誉奖励，高效验证。</h4>
+    </div>
+</div>
+<div class="bootcamp-courses">
+    <div class="container">
+        <div class="bootcamp-courses-header">
+            <h4 class="bootcamp-courses-title">学信大数据</h4>
+            <div class="bootcamp-courses-description" id="studentInfo">
+                高谦  北京化工大学
+            </div>
+        </div>
+        <div class="bootcamp-courses-body" id="items">
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 clearfix footer-col">
+                <img src="img/logo_03.png">
+                <div class="footer-slogan">区块链教育应用探索</div>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">课程</div>
+                <a href="privacy/index.html" target="_blank">全部课程</a><br>
+                <a href="privacy/index.html" target="_blank">我的课程</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">资源管理</div>
+                <a href="privacy/index.html" target="_blank">资源列表</a><br>
+                <a href="labs/index.html" target="_blank">上传资源</a><br>
+                <a href="edu/index.html" target="_blank">查看消息</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">学习社区</div>
+                <a href="info/index.html" target="_blank">讨论区</a><br>
+                <a href="help/index.html" target="_blank">学习成果</a><br>
+            </div>
+            <div class="col-xs-6 col-sm-3 col-md-2 footer-col">
+                <div class="col-title">学信数据</div>
+                <a href="paths/index.html" target="_blank">电子证书</a><br>
+                <a href="paths/index.html" target="_blank">荣誉证明</a><br>
+                <a href="paths/index.html" target="_blank">成绩证明</a><br>
+                <a href="paths/index.html" target="_blank">信息授权</a><br>
+            </div>
+        </div>
+    </div>
+    <div class="text-center copyright">
+        <span>Copyright @2018-2019 区块链智慧教学系统</span>
+        <span class="ver-line"> | </span>
+        <a href="#" target="_blank">北京化工大学版权所有</a>
+    </div>
+</div>
+<script>
+    var account=null;
+    var studentContract=null;
+    var student=null;
+    var web=new Web3(window.web3.currentProvider);
+    function addItem(cName,cType,cContent,organization,cUrl) {
+        var item = document.createElement("div");
+        cName=web.utils.hexToString(cName);
+        cType=web.utils.hexToString(cType);
+        cContent=web.utils.hexToString(cContent);
+        organization=web.utils.hexToString(organization);
+        item.setAttribute("class", "media bootcamp-courses-item");
+        item.innerHTML = '<div class="media-left bootcamp-courses-media">' +
+            '<img class="media-object" src="' + cUrl + '"></div>' +
+            '<div class="media-body bootcamp-courses-body"><div class="bootcamp-courses-info">' +
+            '<h4 class="media-heading"><span>' + cType + '</span>' + cName + '</h4><div>' +
+            '<p>' + cContent + '</p></div>' +
+            '<div>颁发单位：<a>' + organization + '</a></div></div>' +
+            '<div class="bootcamp-courses-subscribe"><div class="pull-right bootcamp-courses-order">' +
+            '<button class="btn pull-right">查看详情</button></div></div></div>';
+
+        document.getElementById("items").appendChild(item);
+    }
+
+
+    async function detectMetaMask() {
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+                        }
+                    })
+                    .then(function (accounts) {
+
+                        account=accounts[0];
+                        console.log(account);
+                        document.getElementById("address_box").innerHTML="当前账户： "+account;
+                    });
+
+            }else{
+                account=provider.selectedAddress;
+                document.getElementById("address_box").innerHTML="当前账户： "+account;
+            }
+        }
+    }
+    function isStudent(){
+        var formData=new FormData();
+        formData.append("studentAddress",account);
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","/school/getStudentByaddress");
+        xhr.onload=async function () {
+            if(xhr.status==200){
+                if(xhr.responseText!=""){
+                    var response=JSON.parse(xhr.responseText);
+                    studentContract=response.caddress;
+                    student=new web.eth.Contract(studentAbi,studentContract);
+                    var temp=await student.methods.getSname().call();
+                    var res=await student.methods.getSchoolInfo().call();
+                    document.getElementById("studentInfo").innerHTML=web.utils.hexToString(temp)+"   "+web.utils.hexToString(res);
+                    var len=await student.methods.getBookCount().call();
+                    for(var i=0;i<len;i++){
+                        var result=await student.methods.getBookByIndex(i).call();
+                        console.log(result);
+                        addItem(result[0],result[1],result[2],result[3],result[4]);
+                    }
+                }else{
+                    alert("当前账号不是学生账号，请您检查账号情况");
+                    document.getElementsByTagName("body")[0].style.display="none";
+                }
+            }else{
+                alert("服务器出错，请联系管理员");
+            }
+        }
+        xhr.send(formData);
+    }
+    window.onload=function () {
+        detectMetaMask();
+        isStudent();
+    }
+</script>
+</body>
+</html>

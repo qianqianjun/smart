@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <title>证书荣誉发布 - 智慧链</title>
+    <link rel="stylesheet" href="../static/highlight.js/9.8.0/monokai-sublime.min.css">
+    <link rel="stylesheet" href="../app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../app/css/dest/styles.css">
+    <script src="../web3.min.js"></script>
+    <script src="../abiset.js"></script>
+    <script src="../crypto-js.js"></script>
+    <script src="../jsencrypt.min.js"></script>
+</head>
+<body>
+<nav class="navbar navbar-default navbar-fixed-top header">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">
+                <img src="../img/logo_03.png">
+            </a>
+        </div>
+        <div class="collapse navbar-collapse" id="header-navbar-collapse">
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a href="/market" target="_blank">市场</a>
+                </li>
+                <li class="">
+                    <a href="/resource" target="_blank">资源</a>
+                </li>
+                <li class="">
+                    <a href="/exercise" target="_blank">练习</a>
+                </li>
+                <li class=" bootcamp new-nav logo-1111">
+                    <a href="/info" target="_blank">学信</a>
+                </li>
+                <li class=" new-nav logo-1111">
+                    <a href="/help" target="_blank">帮助</a>
+                </li>
+            </ul>
+            <div style="color: white;font-size: 20px;line-height: 50px;float: right;" id="address_box">
+
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="container layout layout-margin-top">
+    <div class="row">
+        <div class="col-md-9 layout-body">
+            <form role="form">
+                <div class="form-group">
+                    <label for="cerfImg">上传证书图片</label>
+                    <input type="file" id="cerfImg" style="padding: 6px;width: 100%;border: 1px solid #32f3eb;" />
+                </div>
+                <div class="form-group">
+                    <label for="studentAddress">学生地址</label>
+                    <input type="text" id="studentAddress" class="form-control"/>
+                </div>
+                <div id="errorMsg" style="color: red;font-size: 15px;margin-bottom: 10px;"></div>
+                <input type="button" value="上传证书图片到服务器" class="btn btn-default" onclick="uploadCerfImg()" style="margin-bottom: 20px;">
+            </form>
+            
+            <form role="form" id="commit_to_blockchain">
+                <div class="form-group">
+                    <label for="curl">证书图片url</label>
+                    <input type="text" class="form-control" id="curl" name="curl" readonly="readonly" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="studentContract">学生合约节点地址</label>
+                    <input type="text" class="form-control" id="studentContract" name="studentContract" readonly="readonly" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="type">证书（荣誉）类型</label>
+                    <select id="type" class="form-control" required="required" name="type">
+                        <option value="奖学金">奖学金</option>
+                        <option value="学科竞赛">学科竞赛</option>
+                        <option value="优秀标兵">优秀标兵（三好，优干，优党，优团）</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cerfName">证书（荣誉）名称</label>
+                    <input type="text" class="form-control" id="cerfName" name="cerfName" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="content">证书内容</label>
+                    <textarea id="content" required="required" class="form-control" rows="4" name="content"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="organization">发证机构</label>
+                    <input type="text" class="form-control" id="organization" name="organization" required="required"/>
+                </div>
+                <div class="form-group">
+                    <label for="privateKey">发证机构私钥</label>
+                    <textarea id="privateKey" required="required" class="form-control" rows="10" name="privateKey"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="abstruct">证书（荣誉）签名信息</label>
+                    <textarea id="abstruct" required="required" class="form-control" rows="4" readonly="readonly"></textarea>
+                </div>
+                <button type="button" class="btn btn-info" onclick="sign()">获取签名信息</button>
+                <button type="button" class="btn btn-default" onclick="commitToBlockChain()">证书（荣誉）发布</button>
+            </form>
+        </div>
+        <div class="col-md-3 layout-side">
+            <div class="panel panel-default panel-userinfo">
+                <div class="panel-body body-userinfo">
+                    <div class="media userinfo-header">
+                        <div class="media-left">
+                            <div class="user-avatar">
+
+                                <a class="avatar" href="#sign-modal" data-toggle="modal" data-sign="signin">
+                                    <img class="circle" src="../img/logo-grey.png">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="media-body">
+
+                            <span class="media-heading username">欢迎来到智慧链</span>
+                            <p class="vip-remain">探索区块链+教育模式</p>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebox">
+
+                <div class="sidebox-header">
+                    <h4 class="sidebox-title">最热路径</h4>
+                </div>
+                <div class="sidebox-body course-content side-list-body">
+                    <a href="/paths/python"><img style="width:25px;height:25px" src="../img/1471513769430.png"> Python 研发工程师</a>
+                    <a href="/paths/bigdata"><img style="width:25px;height:25px" src="../img/1471513926288.png"> 大数据工程师</a>
+                    <a href="/paths/cpp"><img style="width:25px;height:25px" src="../img/1471513793360.png"> C++ 研发工程师</a>
+                </div>
+
+            </div>
+
+            <div class="side-image side-qrcode">
+                <img src="../img/ShiyanlouQRCode.png">
+                <div class="side-image-text">关注公众号，手机看教程</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var account=null;
+    var school=null;
+    var web=new Web3(window.web3.currentProvider);
+    async function detectMetaMask() {
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                            document.getElementById("address_box").innerHTML="无法获取账户信息！";
+                        }
+                    })
+                    .then(function (accounts) {
+
+                        account=accounts[0];
+                        console.log(account);
+                        document.getElementById("address_box").innerHTML="当前账户： "+account;
+                    });
+
+            }else{
+                account=provider.selectedAddress;
+                document.getElementById("address_box").innerHTML="当前账户： "+account;
+            }
+        }
+    }
+
+    function isPrinciple(){
+        var formData=new FormData();
+        formData.append("paddress",account);
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","/school/getbypaddress");
+        xhr.onload=function () {
+            if(xhr.status==200){
+                if(xhr.responseText!=''){
+                    var response=JSON.parse(xhr.responseText);
+                    console.log(response.saddress);
+                    school=new web.eth.Contract(schoolAbi,response.saddress);
+                    school.methods.getFullName().call((error,res)=>{
+                        var nameSchool=web.utils.hexToString(res);
+                        document.getElementById("organization").value=nameSchool;
+                    });
+
+                }else{
+                    alert("您不是校长，没有权限");
+                    document.getElementsByTagName("body")[0].style.display='none';
+                }
+            }
+            else{
+                alert("出错了，无法验证账户身份");
+            }
+        }
+        xhr.send(formData);
+    }
+    window.onload=function () {
+        detectMetaMask();
+        isPrinciple();
+    }
+
+    function uploadCerfImg(){
+        var cerfImg = document.querySelector('#cerfImg');
+        var errorMsg = document.querySelector('#errorMsg');
+        var files = cerfImg.files;
+        var curl=document.getElementById("curl");
+        curl.innerText="";
+        var studentAddress=document.getElementById("studentAddress").value;
+        if(files.length === 0) {
+            singleFileUploadError.innerHTML = "Please select a file";
+            singleFileUploadError.style.display = "block";
+        }
+        var file=files[0];
+        var formData = new FormData();
+        formData.append("file", file);
+        formData.append("saddress",studentAddress);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/uploadcertificate");
+        xhr.onload = function() {
+            console.log(xhr.responseText);
+            var response = JSON.parse(xhr.responseText);
+            if(xhr.status == 200) {
+                errorMsg.style.display = "none";
+                document.getElementById("curl").value =response.fileDownloadUri;
+                if(response.caddress==null){
+                    alert("您当前的学生地址不是合法的地址，无法找到合约地址！请重新选择")
+                }else {
+                    document.getElementById("studentContract").value = response.caddress;
+                }
+            } else {
+                errorMsg.innerHTML = (response && response.message) || "Some Error Occurred";
+            }
+        }
+        xhr.send(formData);
+    }
+
+    function sign(){
+        var cerfType=document.getElementById("type").value;
+        var cerfName=document.getElementById("cerfName").value;
+        var content=document.getElementById("content").value;
+        var organization=document.getElementById("organization").value;
+        var privateKey=document.getElementById("privateKey").value;
+        var abstruct=document.getElementById("abstruct");
+        if(cerfType=="" || cerfName=="" || content=="" || organization=="" || privateKey==""){
+            alert("请您将信息填写完整！");
+        }else{
+            var clearText=cerfType+cerfName+content;
+            // 使用私钥进行签名：
+            var sign = new JSEncrypt();
+            sign.setPrivateKey(privateKey);
+            var signature = sign.sign(clearText,CryptoJS.SHA256,"sha256");
+            abstruct.value=signature;
+        }
+    }
+
+
+    async function commitToBlockChain(event){
+        var cerfType=document.getElementById("type").value;
+        var cerfName=document.getElementById("cerfName").value;
+        var content=document.getElementById("content").value;
+        var organization=document.getElementById("organization").value;
+        var curl=document.getElementById("curl").value;
+        var abstruct=document.getElementById("abstruct").value;
+        var studentContract=document.getElementById("studentContract").value;
+        if(cerfType=="" || cerfName=="" || content=="" || organization=="" || curl=="" || abstruct=="" || studentContract==""){
+            alert("请您将信息填写完整！");
+        } else{
+            cerfName=web.utils.stringToHex(cerfName);
+            cerfType=web.utils.stringToHex(cerfType);
+            content=web.utils.stringToHex(content);
+            organization=web.utils.stringToHex(organization);
+            await school.methods.addCertificate(studentContract,cerfName,cerfType,content,organization,curl,abstruct).send({
+                from:account
+            });
+            alert("发布成功");
+        }
+    }
+</script>
+</body>
+</html>

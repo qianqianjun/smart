@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>智慧链-添加学生</title>
+    <link rel="stylesheet" href="../app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../app/css/dest/styles.css">
+    <script src="../web3.min.js"></script>
+    <script src="../abiset.js"></script>
+</head>
+<body>
+<div class="org-body">
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <form role="form">
+                    <div class="form-group">
+                        <label for="schoolName">学校名称</label>
+                        <input type="text" class="form-control" id="schoolName" required="required" readonly="readonly">
+                    </div>
+                    <div class="form-group">
+                        <label for="saddress">合约地址</label>
+                        <input type="text" class="form-control" id="saddress" required="required" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentName">学生名称</label>
+                        <input type="text" class="form-control" id="studentName" required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="studentAddress">学生地址</label>
+                        <input type="text" class="form-control" id="studentAddress"  required="required"/>
+                    </div>
+                    <div class="form-group">
+                        <label for="schoolinfo">学校信息</label>
+                        <input type="text" class="form-control" id="schoolinfo"  required="required"/>
+                    </div>
+                    <input type="button" class="btn btn-default" value="创建" onclick="addStudent()">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var account=null;
+    var school=null;
+    var student_contract_address=null;
+    var web=new Web3(web3.currentProvider);
+    async function detectMetaMask() {
+        if(typeof window.web3 == 'undefined'){
+            // 没有安装web3，直接显示
+            alert("您没有安装 metamask 插件，请安装插件后重启浏览器进行使用！");
+        }else{
+            var provider=window.web3.currentProvider;
+            if(typeof provider.selectedAddress == 'undefined'){
+                provider.enable()
+                    .catch(function (reason) {
+                        if (reason === 'User rejected provider access') {
+                            alert("The user didn't want to sign in!");
+                        } else {
+                            alert("您需要授权才可以使用功能！");
+                        }
+                    })
+                    .then(function (accounts) {
+                        account=accounts[0];
+                        console.log(account);
+                    });
+
+            }else{
+                account=provider.selectedAddress;
+            }
+        }
+    }
+    function isPrinciple(){
+        var formData=new FormData();
+        formData.append("paddress",account);
+        var xhr=new XMLHttpRequest();
+        xhr.open("POST","/school/getbypaddress");
+        xhr.onload=function () {
+            if(xhr.status==200){
+                if(xhr.responseText!=''){
+                    var response=JSON.parse(xhr.responseText);
+                    console.log(response.saddress);
+                    document.getElementById("saddress").value=response.saddress;
+                    school=new web.eth.Contract(schoolAbi,response.saddress);
+                    school.methods.getFullName().call((error,res)=>{
+                        var nameSchool=web.utils.hexToString(res);
+                        document.getElementById("schoolName").value=nameSchool;
+                    });
+
+                }else{
+                    alert("您不是校长，没有权限");
+                    document.getElementsByTagName("body")[0].style.display='none';
+                }
+            }
+            else{
+                alert("出错了，无法验证账户身份");
+            }
+        }
+        xhr.send(formData);
+    }
+    window.onload=function () {
+        detectMetaMask();
+        isPrinciple();
+    }
+    async function addStudent(){
+        // 表单数据
+        var studentName=document.querySelector("#studentName").value;
+        var studentAddress=document.querySelector("#studentAddress").value;
+        var schoolinfo=document.querySelector("#schoolinfo").value;
+        if(schoolinfo=='' || studentAddress=='' ||studentName==''){
+            alert("请您将信息填写完整");
+        }else {
+            await school.methods.addStudent(studentAddress,web.utils.stringToHex(studentName),web.utils.stringToHex(schoolinfo)).send({
+                from: account,
+                gas: 3000000
+            });
+            await school.methods.getStudentByAddress(studentAddress).call((error, res) => {
+                student_contract_address = res;
+            });
+            var formData = new FormData();
+            formData.append("studentAddress", studentAddress);
+            formData.append("contract_address", student_contract_address);
+            xhr = new XMLHttpRequest();
+            xhr.open("POST", "/school/addsc");
+            var success = true;
+            xhr.onload = function () {
+                if (xhr.responseText != "") {
+                    success=true;
+                }
+                else {
+                    alert("服务器发生故障");
+                }
+            };
+            xhr.send(formData);
+            if (success) {
+                alert("您已经成功添加 " + studentName + " 同学，学生地址为：" + studentAddress + " 学生合约地址为：" + student_contract_address);
+            } else {
+                alert("数据已经写入区块链，但是数据库写入失败，请检查，您也可以复制控制台代码重新写入");
+                console.log("student_address 为" + studentAddress + "合约地址为：" + student_contract_address);
+            }
+        }
+    }
+</script>
+</body>
+</html>

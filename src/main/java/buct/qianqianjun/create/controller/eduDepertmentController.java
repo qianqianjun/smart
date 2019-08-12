@@ -1,8 +1,10 @@
 package buct.qianqianjun.create.controller;
 
 import buct.qianqianjun.create.domain.PS;
+import buct.qianqianjun.create.domain.SC;
 import buct.qianqianjun.create.domain.TC;
 import buct.qianqianjun.create.service.PSService;
+import buct.qianqianjun.create.service.SCService;
 import buct.qianqianjun.create.service.TCService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ public class eduDepertmentController {
     private PSService psService;
     @Autowired
     private TCService tcService;
+    @Autowired
+    private SCService scService;
     @GetMapping("/edu")
     public String edu(){
         return "edudepartment/index";
@@ -44,5 +48,22 @@ public class eduDepertmentController {
     @ResponseBody
     public TC addtc(@RequestParam("taddress") String taddress, @RequestParam("caddress") String caddress){
         return tcService.addTC(taddress,caddress);
+    }
+
+    @PostMapping("/school/addsc")
+    @ResponseBody
+    public SC addsc(@RequestParam("studentAddress") String studentAddress,
+                    @RequestParam("contract_address") String contract_address){
+        return scService.addSC(studentAddress,contract_address);
+    }
+
+    @GetMapping("/school/addstudent")
+    public String addstudent(){
+        return "school/addstudent";
+    }
+
+    @GetMapping("/school/addcertificate")
+    public String addCertificate(){
+        return "school/addcertificate";
     }
 }

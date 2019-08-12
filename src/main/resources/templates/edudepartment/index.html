@@ -80,8 +80,7 @@
             console.log(schoolName);
             eduDepertment = new web.eth.Contract(eduDepartmentAbi, eduDepartmentAddress);
             await eduDepertment.methods.addSchool(web.utils.stringToHex(schoolName),principleAddress).send({
-                from :account,
-                gas:3000000
+                from :account
             });
 
             var schoolAddress=null;

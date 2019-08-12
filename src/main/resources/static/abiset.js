@@ -1,5 +1,5 @@
 // 这行要替换为edu的 address
-const eduDepartmentAddress="0x30357414aae9e47a781939b5312193fc4178bc64";
+const eduDepartmentAddress="0x2485a68462352d7db0ba758203fcc6182ea4a3db";
 
 const eduDepartmentAbi=[
     {
@@ -126,6 +126,7 @@ const eduDepartmentAbi=[
         "type": "constructor"
     }
 ];
+
 const resourceAbi=[
     {
         "constant": false,
@@ -343,6 +344,47 @@ const schoolAbi=[
                 "type": "uint256"
             }
         ],
+        "name": "students",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_student",
+                "type": "address"
+            },
+            {
+                "name": "sname",
+                "type": "string"
+            },
+            {
+                "name": "schoolInfo",
+                "type": "string"
+            }
+        ],
+        "name": "addStudent",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
         "name": "teachers",
         "outputs": [
             {
@@ -404,6 +446,25 @@ const schoolAbi=[
             {
                 "name": "",
                 "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "add",
+                "type": "address"
+            }
+        ],
+        "name": "getStudentByAddress",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
             }
         ],
         "payable": false,
@@ -473,6 +534,44 @@ const schoolAbi=[
         ],
         "payable": false,
         "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_student",
+                "type": "address"
+            },
+            {
+                "name": "_cname",
+                "type": "string"
+            },
+            {
+                "name": "_Type",
+                "type": "string"
+            },
+            {
+                "name": "_content",
+                "type": "string"
+            },
+            {
+                "name": "_organization",
+                "type": "string"
+            },
+            {
+                "name": "_bookurl",
+                "type": "string"
+            },
+            {
+                "name": "_abstruct",
+                "type": "string"
+            }
+        ],
+        "name": "addCertificate",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
         "type": "function"
     },
     {
@@ -754,6 +853,252 @@ const teacherAbi=[
             },
             {
                 "name": "_owner",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    }
+];
+
+const studentAbi=[
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_schoolInfo",
+                "type": "string"
+            }
+        ],
+        "name": "setSchoolInfo",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getSchoolInfo",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getSname",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "index",
+                "type": "uint256"
+            }
+        ],
+        "name": "getBookByIndex",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            },
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "account",
+        "outputs": [
+            {
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "name": "books",
+        "outputs": [
+            {
+                "name": "cname",
+                "type": "string"
+            },
+            {
+                "name": "Type",
+                "type": "string"
+            },
+            {
+                "name": "content",
+                "type": "string"
+            },
+            {
+                "name": "organization",
+                "type": "string"
+            },
+            {
+                "name": "bookurl",
+                "type": "string"
+            },
+            {
+                "name": "abstruct",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_sname",
+                "type": "string"
+            }
+        ],
+        "name": "setSname",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "sname",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "schoolInfo",
+        "outputs": [
+            {
+                "name": "",
+                "type": "string"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "getBookCount",
+        "outputs": [
+            {
+                "name": "",
+                "type": "uint256"
+            }
+        ],
+        "payable": false,
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "constant": false,
+        "inputs": [
+            {
+                "name": "_cname",
+                "type": "string"
+            },
+            {
+                "name": "_Type",
+                "type": "string"
+            },
+            {
+                "name": "_content",
+                "type": "string"
+            },
+            {
+                "name": "_organization",
+                "type": "string"
+            },
+            {
+                "name": "_bookurl",
+                "type": "string"
+            },
+            {
+                "name": "_abstruct",
+                "type": "string"
+            }
+        ],
+        "name": "receiveCertificate",
+        "outputs": [],
+        "payable": false,
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "name": "_schoolInfo",
+                "type": "string"
+            },
+            {
+                "name": "_account",
                 "type": "address"
             }
         ],

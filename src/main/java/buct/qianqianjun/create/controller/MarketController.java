@@ -9,4 +9,9 @@ public class MarketController {
     public String market(){
         return "market/index";
     }
+
+    @GetMapping("/help")
+    public String help(){
+        return "help/index";
+    }
 }

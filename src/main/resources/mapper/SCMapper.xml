@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="buct.qianqianjun.create.dao.SCDao">
+    <select id="getSCBySAddress" parameterType="STRING" resultType="buct.qianqianjun.create.domain.SC">
+        select * from sc where sc.saddress=#{saddress};
+    </select>
+    <insert id="addSC" parameterType="buct.qianqianjun.create.domain.SC">
+        insert into sc values(#{saddress},#{caddress});
+    </insert>
+    <update id="fixBySC" parameterType="buct.qianqianjun.create.domain.SC">
+        update sc set sc.saddress=#{saddresss},sc.caddress=#{caddress};
+    </update>
+    <delete id="deleteBySAddress" parameterType="STRING">
+        delete from sc where sc.saddress=#{saddress};
+    </delete>
+
+
+    <resultMap id="cao" type="buct.qianqianjun.create.domain.SC">
+        <id column="saddress" javaType="String" jdbcType="VARCHAR" property="saddress"></id>
+        <result column="caddress" javaType="String" jdbcType="VARCHAR" property="caddress"></result>
+    </resultMap>
+    <select id="getAll" resultMap="cao">
+        select * from sc;
+    </select>
+</mapper>
