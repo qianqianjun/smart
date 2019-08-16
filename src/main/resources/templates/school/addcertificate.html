@@ -259,7 +259,11 @@
             var sign = new JSEncrypt();
             sign.setPrivateKey(privateKey);
             var signature = sign.sign(clearText,CryptoJS.SHA256,"sha256");
+            console.log("加密前");
+            console.log(clearText);
             abstruct.value=signature;
+            console.log("加密后");
+            console.log(signature);
         }
     }
 

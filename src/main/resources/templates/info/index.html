@@ -57,7 +57,6 @@
         <div class="bootcamp-courses-header">
             <h4 class="bootcamp-courses-title">学信大数据</h4>
             <div class="bootcamp-courses-description" id="studentInfo">
-                高谦  北京化工大学
             </div>
         </div>
         <div class="bootcamp-courses-body" id="items">
@@ -109,7 +108,7 @@
     var studentContract=null;
     var student=null;
     var web=new Web3(window.web3.currentProvider);
-    function addItem(cName,cType,cContent,organization,cUrl) {
+    function addItem(cName,cType,cContent,organization,cUrl,index) {
         var item = document.createElement("div");
         cName=web.utils.hexToString(cName);
         cType=web.utils.hexToString(cType);
@@ -123,7 +122,7 @@
             '<p>' + cContent + '</p></div>' +
             '<div>颁发单位：<a>' + organization + '</a></div></div>' +
             '<div class="bootcamp-courses-subscribe"><div class="pull-right bootcamp-courses-order">' +
-            '<button class="btn pull-right">查看详情</button></div></div></div>';
+            '<button class="btn pull-right" onclick="copyInfo(\''+studentContract+'?'+index+'\')">复制地址</button></div></div></div>';
 
         document.getElementById("items").appendChild(item);
     }
@@ -176,7 +175,7 @@
                     for(var i=0;i<len;i++){
                         var result=await student.methods.getBookByIndex(i).call();
                         console.log(result);
-                        addItem(result[0],result[1],result[2],result[3],result[4]);
+                        addItem(result[0],result[1],result[2],result[3],result[4],i);
                     }
                 }else{
                     alert("当前账号不是学生账号，请您检查账号情况");
@@ -191,6 +190,21 @@
     window.onload=function () {
         detectMetaMask();
         isStudent();
+    }
+
+
+
+
+    function copyInfo(value){
+        const input = document.createElement('input');
+        document.body.appendChild(input);
+        input.setAttribute('value', value);
+        input.select();
+        if (document.execCommand('copy')) {
+            document.execCommand('copy');
+            alert("信息已经复制到剪切板！");
+        }
+        document.body.removeChild(input);
     }
 </script>
 </body>

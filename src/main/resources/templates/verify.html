@@ -1,0 +1,164 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>数据验证 - 智慧链</title>
+    <link rel="stylesheet" href="static/highlight.js/9.8.0/monokai-sublime.min.css">
+    <link rel="stylesheet" href="app/css/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="app/css/dest/styles.css">
+    <script src="web3.min.js"></script>
+    <script src="abiset.js"></script>
+    <script type="text/javascript" src="jsencrypt.min.js"></script>
+    <script type="text/javascript" src="crypto-js.js"></script>
+    <style>
+        .bootcamp-courses-media img{
+            height: 250px;
+            width: auto;
+        }
+        .bootcamp-description{
+            margin-top:0px;
+
+        }
+        .Input{
+            margin-right: 20px;
+            height: 41px;
+            position: relative;
+            top: 1px;
+        }
+    </style>
+</head>
+<body>
+<div class="bootcamp-description layout-no-margin-top">
+    <div>
+        <h1>学信数据查验系统（验证）</h1>
+        <h4>高效连接学校和用人单位，学信数据，荣誉奖励，高效验证。</h4>
+    </div>
+
+    <form class="form-inline">
+        <div class="form-group" style="width: 900px;">
+            <input type="text" class="form-control Input" style="width: 80%;" id="name"
+                   placeholder="请输入要查询内容的口令">
+            <button type="button" class="btn btn-info" onclick="getMessage()">提交</button>
+        </div>
+    </form>
+
+</div>
+<div class="bootcamp-courses">
+    <div class="container">
+        <div class="bootcamp-courses-header">
+            <h4 class="bootcamp-courses-title">学信大数据</h4>
+            <div class="bootcamp-courses-description" id="studentInfo">
+            </div>
+        </div>
+        <div class="bootcamp-courses-body" id="items">
+        </div>
+    </div>
+</div>
+</div>
+
+
+
+<div class="modal fade" id="sign_modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm" role="document" style="width: 50%;">
+        <div class="modal-content">
+            <button type="button" class="close-modal" onclick="closeShadow()"><span aria-hidden="true">&times;</span></button>
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active">
+                        <a href="#signin-form" aria-controls="signin-form" role="tab" data-toggle="tab">输入发证机构的公钥</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active">
+                        <form>
+                            <input id="clearText" type="hidden">
+                            <input id="signature" type="hidden">
+                            <div class="form-group">
+                                <textarea class="form-control" rows="6" id="publicKey"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <input class="btn btn-primary" type="button" value="点击验证" onclick="verify()">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade in" id="black_window_shadow" style="display: none;"></div>
+
+<script>
+    var web=new Web3(window.web3.currentProvider);
+    function addItem(cName,cType,cContent,organization,cUrl,abstruct) {
+        var item = document.createElement("div");
+        cName=web.utils.hexToString(cName);
+        cType=web.utils.hexToString(cType);
+        cContent=web.utils.hexToString(cContent);
+        organization=web.utils.hexToString(organization);
+        item.setAttribute("class", "media bootcamp-courses-item");
+
+        var clearText=cType+cName+cContent;
+        item.innerHTML = '<div class="media-left bootcamp-courses-media">' +
+            '<img class="media-object" src="' + cUrl + '"></div>' +
+            '<div class="media-body bootcamp-courses-body"><div class="bootcamp-courses-info">' +
+            '<h4 class="media-heading"><span>' + cType + '</span>' + cName + '</h4><div>' +
+            '<p>' + cContent + '</p></div>' +
+            '<div>颁发单位：<a>' + organization + '</a></div></div>' +
+            '<div class="bootcamp-courses-subscribe"><div class="pull-right bootcamp-courses-order">' +
+            '<button class="btn pull-right" onclick="showShadow(\''+clearText+'\',\''+abstruct+'\')">验证信息</button></div></div></div>';
+
+        document.getElementById("items").appendChild(item);
+    }
+    async function getMessage() {
+        var index=document.getElementById("name").value;
+        if(index==''){
+            alert("请您输入要查询的信息口令");
+        }else{
+            var arr=index.split("?");
+            var studentContract=arr[0];
+            var i=arr[1];
+            var student=new web.eth.Contract(studentAbi,studentContract);
+            var result=await student.methods.getBookByIndex(i).call();
+            console.log(result);
+            addItem(result[0],result[1],result[2],result[3],result[4],result[5]);
+        }
+    }
+
+    function showShadow(origin,signature) {
+        document.getElementById("black_window_shadow").style.display = "block";
+        document.getElementById("sign_modal").style.display = "block";
+        document.getElementById("sign_modal").setAttribute("class", "modal fade in");
+
+        document.getElementById("signature").value = signature;
+        document.getElementById("clearText").value = origin;
+    }
+    function verify(){
+        var publicKey=document.getElementById("publicKey").value;
+        if(publicKey!='') {
+            publicKey = "-----BEGIN RSA PUBLIC KEY-----\n"+
+                "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC8tf423CJo5VOleLMNrx5q79Q4k0H0PbEs75yv\n" +
+                "C+KCaIOTgZt2ws4WlSoO9JLg/9urhlkmWnRQYD7BzBuREMUCAnYl0BluTLBpfZ06/K5fjLS64hGz\n" +
+                "/iMvIMy7PqX83ZshHPgpAnY3h0/tbOQXWonocQiLCETN6MLyJibkewkpGwIDAQAB\n"+
+                "-----END RSA PUBLIC KEY-----";
+            var signature=document.getElementById("signature").value;
+            var origin=document.getElementById("clearText").value;
+            var ver = new JSEncrypt();
+            ver.setPublicKey(publicKey);
+            var ok = ver.verify(origin, signature, CryptoJS.SHA256);
+            if (ok) {
+                alert("验证通过！信息可信");
+            } else {
+                alert("请注意，信息没有通过验证！");
+            }
+            closeShadow();
+        }
+    }
+
+    function closeShadow(){
+        document.getElementById("black_window_shadow").style.display="none";
+        document.getElementById("sign_modal").style.display="none";
+        document.getElementById("sign_modal").setAttribute("class","modal fade");
+    }
+</script>
+</body>
+</html>

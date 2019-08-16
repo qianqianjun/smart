@@ -23,4 +23,9 @@ public class InfoController {
     public SC isStudent(@RequestParam("studentAddress") String saddress) {
         return scService.getBySaddress(saddress);
     }
+
+    @GetMapping("/verify")
+    public String verify(){
+        return "verify";
+    }
 }
