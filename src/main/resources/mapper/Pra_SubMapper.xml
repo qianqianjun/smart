@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="buct.qianqianjun.create.dao.Pra_SubDao">
+    <select id="getAllSubject"  resultType="buct.qianqianjun.create.domain.Prac_Subject">
+        select * from prasub;
+    </select>
+
+    <select id="getChaptersBySubjectName" parameterType="STRING" resultType="buct.qianqianjun.create.domain.Prac_Chapter">
+        select * from pracha where pracha.chapter_id in
+        (
+        select cha_id from prasub_cha where prasub_cha.sub_id =
+        (select subject_id from  prasub where subject_name = #{subject_name})
+        )
+    </select>
+
+    <select id="getQuestionsByChapterID" parameterType="INTEGER" resultType="buct.qianqianjun.create.domain.Prac_Question">
+        select * from praque where praque.question_id in
+          (select que_id from pracha_que where pracha_que.cha_id = #{chapter_ID})
+    </select>
+
+    <insert id="addScore" parameterType="buct.qianqianjun.create.domain.Prac_Score">
+        insert into prasco values (#{student},#{subject_id},#{chapter_id},#{score})
+    </insert>
+
+
+</mapper>

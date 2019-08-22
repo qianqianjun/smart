@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<table border = "1">
+    <tr th:each="subject: ${subjects}">
+        <td th:text="${subject.subject_name}"></td>
+        <td th:text="${subject.subject_id}"></td>
+    </tr>
+</table>
+
+<table border = "1">
+    <tr th:each="chapter: ${chapters}">
+        <td th:text="${chapter.chapter_name}"></td>
+        <td th:text="${chapter.chapter_id}"></td>
+        <td th:text="${chapter.chapter_order}"></td>
+    </tr>
+</table>
+
+<table border = "1">
+    <tr th:each="question: ${questions}">
+        <td th:text="${question.question_id}"></td>
+        <td th:text="${question.stem}"></td>
+        <td th:text="${question.option1}"></td>
+        <td th:text="${question.option2}"></td>
+        <td th:text="${question.option3}"></td>
+        <td th:text="${question.option4}"></td>
+        <td th:text="${question.answer}"></td>
+    </tr>
+</table>
+
+
+</body>
+</html>
